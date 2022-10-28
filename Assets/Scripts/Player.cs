@@ -111,8 +111,11 @@ public class Player : MonoBehaviour
             return;
         }
         lives -= 1;
+        _uiManager.UpdateLives(lives);
+        
         if (lives == 0)
         {
+            _uiManager.onPlayerDeath();
             _spawnManager.OnPlayerDeath();
             Destroy(this.gameObject);
         }
