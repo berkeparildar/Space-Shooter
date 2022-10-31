@@ -9,19 +9,20 @@ using Random = UnityEngine.Random;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] 
-    private float speed = 4f;
-
+    private float _speed = 4f;
     private Player _player;
+    private Animator _animator;
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
+        _animator = GetComponent<Animator>();
         _player = GameObject.Find("Player").GetComponent<Player>();
     }
 
     // Update is called once per frame
     private void Update()
     {
-        transform.Translate(Vector3.down * (Time.deltaTime * speed));
+        transform.Translate(Vector3.down * (Time.deltaTime * _speed));
 
         if (transform.position.y < -6.5f)
         {
@@ -43,8 +44,9 @@ public class Enemy : MonoBehaviour
             {
                 player.Damage();
             }
-            
-            Destroy(this.gameObject);
+            _animator.SetTrigger("OnEnemyDeath");
+            _speed = 0;
+            Destroy(this.gameObject, 2.5f);
         }
         else if (other.transform.tag.Equals("Laser"))
         {
@@ -53,7 +55,9 @@ public class Enemy : MonoBehaviour
             {
                 _player.AddScore();
             }
-            Destroy(this.gameObject);
+            _animator.SetTrigger("OnEnemyDeath");
+            _speed = 0;
+            Destroy(this.gameObject, 2.5f);
         }
     }
 }

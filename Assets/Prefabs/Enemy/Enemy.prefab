@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3383730319441915335}
   - component: {fileID: 6678599342428905633}
   - component: {fileID: 1902683713909941752}
+  - component: {fileID: 6316845347329953694}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Respawn
@@ -147,3 +148,23 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.5246658, y: 2.845584}
   m_EdgeRadius: 0
+--- !u!95 &6316845347329953694
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 564761817283660943}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f164d5ef074e8604f81b678a4f58acde, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

@@ -21,7 +21,6 @@ public class Laser : MonoBehaviour
     private void Update()
     {
         transform.Translate(Vector3.up * (Time.deltaTime * lazer_speed));
-
         if (transform.position.y > 7f)
         {
             if (_isParentNotNull)

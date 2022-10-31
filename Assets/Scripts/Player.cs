@@ -20,6 +20,8 @@ public class Player : MonoBehaviour
     private GameObject tripleShotPrefab;
     [SerializeField]
     private GameObject shieldEffect;
+    [SerializeField]
+    private GameObject _rightEngine, _leftEngine;
     [SerializeField] private int _score;
     private UIManager _uiManager;
 
@@ -31,13 +33,12 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-       transform.position = new Vector3(0, 0, 0);
+       transform.position = new Vector3(0, -3, 0);
        _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
        if (_spawnManager == null)
        {
            Debug.Log("Spawn is null.");
        }
-
        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
     }
     
@@ -112,10 +113,19 @@ public class Player : MonoBehaviour
         }
         lives -= 1;
         _uiManager.UpdateLives(lives);
+        if (lives == 2)
+        {
+            _leftEngine.SetActive(true);
+        }
+
+        if (lives == 1)
+        {
+            _rightEngine.SetActive(true);
+        }
         
         if (lives == 0)
         {
-            _uiManager.onPlayerDeath();
+            _uiManager.OnPlayerDeath();
             _spawnManager.OnPlayerDeath();
             Destroy(this.gameObject);
         }

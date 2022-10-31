@@ -13,9 +13,16 @@ public class UIManager : MonoBehaviour
     private Image _livesImage;
     [SerializeField] 
     private Text _gameOverText;
+    [SerializeField] 
+    private Text _restartText;
+
+    private GameManager _gameManager;
     // Start is called before the first frame update
     private void Start()
     {
+        _gameOverText.gameObject.SetActive(false);
+        _restartText.gameObject.SetActive(false);
+        _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
@@ -32,13 +39,21 @@ public class UIManager : MonoBehaviour
         _livesImage.sprite = _liveSprites[currentLives];
         if (currentLives == 0)
         {
-            StartCoroutine(GameOverFlickerRoutine());
+            GameOverSequence();
         }
     }
 
-    public void onPlayerDeath()
+    void GameOverSequence()
+    {
+        _gameManager.GameOver();
+        _restartText.gameObject.SetActive(true);
+        StartCoroutine(GameOverFlickerRoutine());
+    }
+    
+    public void OnPlayerDeath()
     {
         _gameOverText.gameObject.SetActive(true);
+        _restartText.gameObject.SetActive(true);
     }
 
     IEnumerator GameOverFlickerRoutine()
