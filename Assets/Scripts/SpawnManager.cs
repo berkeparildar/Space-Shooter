@@ -26,7 +26,7 @@ public class SpawnManager : MonoBehaviour
 
     private IEnumerator SpawnEnemyRoutine()
     {
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(5.0f);
         while (stopSpawning == false)
         {
             var spawnPlace = new Vector3(Random.Range(-8f, 8f), 7, 0);

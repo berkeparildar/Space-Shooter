@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -7,34 +8,32 @@ using UnityEngine.Serialization;
 public class Player : MonoBehaviour
 {
     private float _speed = 5f;
-    [SerializeField]
-    private GameObject laserPrefab;
+    [SerializeField] private GameObject laserPrefab;
     private float _canFire = -1f;
     private const float FireRate = 0.15f;
-    [SerializeField]
-    private int lives = 3;
+    [SerializeField] private int lives = 3;
     private SpawnManager _spawnManager;
     private bool _tripleShotActive = false;
     private bool _shieldActive = false;
-    [SerializeField]
-    private GameObject tripleShotPrefab;
-    [SerializeField]
-    private GameObject shieldEffect;
-    [SerializeField]
-    private GameObject _rightEngine, _leftEngine;
+    [SerializeField] private GameObject tripleShotPrefab;
+    [SerializeField] private GameObject shieldEffect;
+    [SerializeField] private GameObject _rightEngine, _leftEngine;
     [SerializeField] private int _score;
+    private int _bestScore;
     private UIManager _uiManager;
-
-    public int Score
-    {
-        get => _score;
-        set => _score = value;
-    }
-
+    [SerializeField] private AudioClip _laserSound;
+    private AudioSource _audioSource;
+    private AudioClip _deathSound;
+    private Animator _animator;
+    
     private void Start()
     {
-       transform.position = new Vector3(0, -3, 0);
+        transform.position = new Vector3(0, -3, 0);
        _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+       _audioSource = GetComponent<AudioSource>();
+       _animator = GetComponent<Animator>();
+       _audioSource.clip = _laserSound;
+       _bestScore = PlayerPrefs.GetInt("HighScore", 0);
        if (_spawnManager == null)
        {
            Debug.Log("Spawn is null.");
@@ -45,7 +44,6 @@ public class Player : MonoBehaviour
     private void Update()
     {
         CalculateMovement();
-        
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
         {
             FireLaser();
@@ -64,13 +62,27 @@ public class Player : MonoBehaviour
             Instantiate(laserPrefab, new Vector3(position.x, position.y + 1, position.z),
             Quaternion.identity);
         }
+        _audioSource.Play(0);
     }
 
     private void CalculateMovement()
     {
         var horizontalInput = Input.GetAxis("Horizontal");
         var verticalInput = Input.GetAxis("Vertical");
-        var direction = new Vector3(horizontalInput, verticalInput);
+
+        if (horizontalInput < 0)
+        {
+            _animator.SetTrigger("isTurningLeft");
+        }
+        else if (horizontalInput > 0)
+        {
+            _animator.SetTrigger("isTurningRight");
+        }
+        else
+        {
+            _animator.SetTrigger("none");
+        }
+        
         transform.Translate(new Vector3(horizontalInput, verticalInput, 0) * (_speed * Time.deltaTime));
         if (transform.position.y >= 0)
         {
@@ -108,9 +120,10 @@ public class Player : MonoBehaviour
         if (_shieldActive)
         {
             _shieldActive = false;
-            shieldEffect.SetActive(_shieldActive);
+            shieldEffect.SetActive(false);
             return;
         }
+        
         lives -= 1;
         _uiManager.UpdateLives(lives);
         if (lives == 2)
@@ -129,6 +142,7 @@ public class Player : MonoBehaviour
             _spawnManager.OnPlayerDeath();
             Destroy(this.gameObject);
         }
+        
     }
 
     public void ActivateTripleShotPowerUp()
@@ -164,6 +178,16 @@ public class Player : MonoBehaviour
     public void AddScore()
     {
         _score += 10;
-        _uiManager.UpdateScore(_score);
+        BestScore();
+        _uiManager.UpdateScore(_score, _bestScore);
+    }
+
+    private void BestScore()
+    {
+        if (_score > _bestScore)
+        {
+            _bestScore = _score;
+            PlayerPrefs.SetInt("HighScore", _bestScore);
+        }
     }
 }

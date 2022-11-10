@@ -10,7 +10,6 @@ public class Asteroid : MonoBehaviour
     private float _speed = 20.0f;
     [SerializeField]
     private GameObject Explosion;
-
     private SpawnManager _spawnManager;
     // Start is called before the first frame update
     void Start()

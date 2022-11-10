@@ -1,22 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField]
-    private Text _scoreText;
-    [SerializeField]
-    private Sprite[] _liveSprites;
-    [SerializeField]
-    private Image _livesImage;
-    [SerializeField] 
-    private Text _gameOverText;
-    [SerializeField] 
-    private Text _restartText;
-
-    private GameManager _gameManager;
+    [SerializeField] private Text _scoreText;
+    [SerializeField] private Text _bestScoreText;
+    [SerializeField] private Sprite[] _liveSprites;
+    [SerializeField] private Image _livesImage;
+    [SerializeField] private Text _gameOverText;
+    [SerializeField] private Text _restartText;
+    [SerializeField] private GameObject pauseMenu; private GameManager _gameManager;
     // Start is called before the first frame update
     private void Start()
     {
@@ -29,9 +25,10 @@ public class UIManager : MonoBehaviour
     private void Update()
     {
     }
-    public void UpdateScore(int playerScore)
+    public void UpdateScore(int playerScore, int bestScore)
     {
         _scoreText.text = "Score: " + playerScore.ToString();
+        _bestScoreText.text = "Best Score: " + bestScore.ToString();
     }
 
     public void UpdateLives(int currentLives)
@@ -56,6 +53,16 @@ public class UIManager : MonoBehaviour
         _restartText.gameObject.SetActive(true);
     }
 
+    public void Resume()
+    {
+        _gameManager.ResumePlay();
+    }
+
+    public void BackMain()
+    {
+        SceneManager.LoadScene(0);
+    }
+    
     IEnumerator GameOverFlickerRoutine()
     {
         while (true)

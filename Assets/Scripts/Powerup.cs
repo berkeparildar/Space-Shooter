@@ -11,10 +11,8 @@ public class Powerup : MonoBehaviour
     private float speed = 3f;
     [SerializeField]
     private int powerUpID;
+    [SerializeField] private AudioClip _audioClip;
     
-    private void Start()
-    {
-    }
 
     private void Update()
     {
@@ -31,6 +29,7 @@ public class Powerup : MonoBehaviour
         if (col.transform.name == "Player")
         {
             var _player = col.transform.GetComponent<Player>();
+            AudioSource.PlayClipAtPoint(_audioClip, transform.position);
             if (_player != null)
             {
                 switch (powerUpID)
